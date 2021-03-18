@@ -11,6 +11,10 @@ import ActionDetails from '../screens/ActionDetails'
 import ContactsList from '../screens/ContactsList'
 import ContactDetails from '../screens/ContactDetails'
 import Settings from '../screens/Settings'
+import Loading from '../screens/Loading'
+
+import SignIn from '../screens/SignIn'
+import SignUp from '../screens/SignUp'
 
 const ContactsStack = createStackNavigator()
 const ContactsStackScreen = () => (
@@ -81,16 +85,42 @@ const AppTabsScreen = () => (
 
 const AppDrawer = createDrawerNavigator()
 const AppDrawerScreen = () => (
-  <AppDrawer.Navigator>
-    <AppDrawer.Screen name="Tabs" component={AppTabsScreen} />
+  <AppDrawer.Navigator drawerType="slide">
+    <AppDrawer.Screen name="Tabs" component={AppTabsScreen} options={{ drawerLabel: 'Home' }} />
     <AppDrawer.Screen name="Settings" component={Settings} />
   </AppDrawer.Navigator>
 )
 
-export default () => (
-  <NavigationContainer>
-    {/* <ContactsStackScreen /> */}
-    {/* <AppTabsScreen /> */}
-    <AppDrawerScreen />
-  </NavigationContainer>
+const AuthStack = createStackNavigator()
+const AuthStackScreen = () => (
+  <AuthStack.Navigator>
+    <AuthStack.Screen name="SignIn" component={SignIn} />
+    <AuthStack.Screen name="SignUp" component={SignUp} />
+  </AuthStack.Navigator>
 )
+
+export default () => {
+  const [isLoading, setIsLoading] = React.useState(true)
+  const [user, setUser] = React.useState(null)
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(!isLoading)
+      setUser({})
+    }, 2000)
+
+    // setTimeout(() => {
+    //   setUser({})
+    // }, 1000)
+  }, [])
+
+  return (
+    <NavigationContainer>
+      {/* <ContactsStackScreen /> */}
+      {/* <AppTabsScreen /> */}
+      {/* <AppDrawerScreen /> */}
+      {/* <AuthStackScreen /> */}
+      {isLoading ? <Loading /> : user ? <AppDrawerScreen /> : <AuthStackScreen />}
+    </NavigationContainer>
+  )
+}
