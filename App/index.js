@@ -1,4 +1,6 @@
-import React from "react";
-import Screen from "./screens/ContactsList";
+import React from 'react'
+import Screen from './screens/ContactsList'
 
-export default () => <Screen />;
+import Navigation from './config/navigation'
+
+export default () => <Navigation />
