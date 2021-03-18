@@ -12,6 +12,8 @@ import ContactsList from '../screens/ContactsList'
 import ContactDetails from '../screens/ContactDetails'
 import Settings from '../screens/Settings'
 import Loading from '../screens/Loading'
+import Modal from '../screens/Modal'
+import Modal2 from '../screens/Modal2'
 
 import SignIn from '../screens/SignIn'
 import SignUp from '../screens/SignUp'
@@ -20,7 +22,7 @@ const ContactsStack = createStackNavigator()
 const ContactsStackScreen = () => (
   <ContactsStack.Navigator
     screenOptions={{
-      headerStyle: { backgroundColor: 'red' },
+      headerStyle: { backgroundColor: 'pink' },
     }}
   >
     <ContactsStack.Screen
@@ -99,7 +101,8 @@ const AuthStackScreen = () => (
   </AuthStack.Navigator>
 )
 
-export default () => {
+const RootStack = createStackNavigator()
+const RootStackScreen = () => {
   const [isLoading, setIsLoading] = React.useState(true)
   const [user, setUser] = React.useState(null)
 
@@ -107,20 +110,28 @@ export default () => {
     setTimeout(() => {
       setIsLoading(!isLoading)
       setUser({})
-    }, 2000)
-
-    // setTimeout(() => {
-    //   setUser({})
-    // }, 1000)
+    }, 500)
   }, [])
 
   return (
+    <RootStack.Navigator headerMode="none" screenOptions={{ animationEnabled: false }} mode="modal">
+      {isLoading ? (
+        <RootStack.Screen name="Loading" component={Loading} />
+      ) : user ? (
+        <RootStack.Screen name="AppDrawerScreen" component={AppDrawerScreen} />
+      ) : (
+        <RootStack.Screen name="AuthStackScreen" component={AuthStackScreen} />
+      )}
+      <RootStack.Screen name="Modal" component={Modal} options={{ animationEnabled: true }} />
+      <RootStack.Screen name="Modal2" component={Modal} options={{ animationEnabled: false }} />
+    </RootStack.Navigator>
+  )
+}
+
+export default () => {
+  return (
     <NavigationContainer>
-      {/* <ContactsStackScreen /> */}
-      {/* <AppTabsScreen /> */}
-      {/* <AppDrawerScreen /> */}
-      {/* <AuthStackScreen /> */}
-      {isLoading ? <Loading /> : user ? <AppDrawerScreen /> : <AuthStackScreen />}
+      <RootStackScreen />
     </NavigationContainer>
   )
 }
